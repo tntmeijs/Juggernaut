@@ -18,6 +18,8 @@ namespace jnt
 
         void InitVulkan();
 
+        void CreateInstance();
+
         void MainLoop();
 
         void Cleanup();
