@@ -10,16 +10,16 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/_deps/glfw ${CMAKE_SOURCE_DIR}/_deps/glfw)
-target_link_libraries(${RENDERER_NAME} glfw)
+target_link_libraries(${RENDERER_NAME} PRIVATE glfw)
 
 # GLM
 add_subdirectory(${CMAKE_SOURCE_DIR}/_deps/glm ${CMAKE_SOURCE_DIR}/_deps/glm)
-target_link_libraries(${RENDERER_NAME} glm)
+target_link_libraries(${RENDERER_NAME} PRIVATE glm)
 add_definitions(-DGLM_FORCE_RADIANS -DGLM_FORCE_DEPTH_ZERO_TO_ONE)
 
 # Vulkan
 find_package(Vulkan)
-target_link_libraries(${RENDERER_NAME} ${Vulkan_LIBRARIES})
+target_link_libraries(${RENDERER_NAME} PRIVATE ${Vulkan_LIBRARIES})
 target_include_directories(${RENDERER_NAME} PRIVATE ${Vulkan_INCLUDE_DIRS})
 
 # Directory structure in IDEs that support it
