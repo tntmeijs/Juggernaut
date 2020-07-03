@@ -17,6 +17,11 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/_deps/glm ${CMAKE_SOURCE_DIR}/_deps/glm)
 target_link_libraries(${RENDERER_NAME} glm)
 add_definitions(-DGLM_FORCE_RADIANS -DGLM_FORCE_DEPTH_ZERO_TO_ONE)
 
+# Vulkan
+find_package(Vulkan)
+target_link_libraries(${RENDERER_NAME} ${Vulkan_LIBRARIES})
+target_include_directories(${RENDERER_NAME} PRIVATE ${Vulkan_INCLUDE_DIRS})
+
 # Directory structure in IDEs that support it
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
 
