@@ -12,6 +12,11 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/_deps/glfw ${CMAKE_SOURCE_DIR}/_deps/glfw)
 target_link_libraries(${RENDERER_NAME} glfw)
 
+# GLM
+add_subdirectory(${CMAKE_SOURCE_DIR}/_deps/glm ${CMAKE_SOURCE_DIR}/_deps/glm)
+target_link_libraries(${RENDERER_NAME} glm)
+add_definitions(-DGLM_FORCE_RADIANS -DGLM_FORCE_DEPTH_ZERO_TO_ONE)
+
 # Directory structure in IDEs that support it
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
 
