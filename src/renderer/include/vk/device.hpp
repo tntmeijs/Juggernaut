@@ -7,6 +7,7 @@ namespace jnt
 {
     // Juggernaut forward declarations
     class VulkanInstance;
+    class VulkanQueueFamilies;
 
     /**
      * Wrapper class that makes it possible to interface with logical and physical
@@ -17,10 +18,21 @@ namespace jnt
     public:
         bool CreatePhysical(const VulkanInstance& instance);
 
+        void FindQueueFamilies();
+
         void Destroy() const;
+
+        /**
+         * Retrieve the Vulkan physical device object
+         * 
+         * @return  Physical device object
+         */
+        const VkPhysicalDevice& GetPhysical() const;
 
     private:
         VkPhysicalDevice PhysicalDevice;
+
+        VulkanQueueFamilies* QueueFamilies;
     };
 }
 

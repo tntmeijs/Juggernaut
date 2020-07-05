@@ -70,6 +70,8 @@ void Renderer::InitVulkan()
     {
 		ConsoleOutput::Error("No suitable physical devices found on this system.");
     }
+
+    Device->FindQueueFamilies();
 }
 
 void Renderer::MainLoop()

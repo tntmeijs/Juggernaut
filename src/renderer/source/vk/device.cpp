@@ -1,5 +1,6 @@
 #include "vk/device.hpp"
 #include "vk/instance.hpp"
+#include "vk/queue_families.hpp"
 #include "utility/console_output.hpp"
 
 #include <map>
@@ -83,5 +84,27 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 	return false;
 }
 
+void VulkanDevice::FindQueueFamilies()
+{
+	QueueFamilies = new VulkanQueueFamilies();
+	QueueFamilies->Find(PhysicalDevice);
+
+	if (QueueFamilies->IsComplete())
+	{
+		ConsoleOutput::Success("Found all required queue families.");
+	}
+	else
+	{
+		ConsoleOutput::Error("Unable to find all required queue families.");
+	}
+}
+
 void VulkanDevice::Destroy() const
-{}
+{
+	delete QueueFamilies;
+}
+
+const VkPhysicalDevice& VulkanDevice::GetPhysical() const
+{
+	return PhysicalDevice;
+}
