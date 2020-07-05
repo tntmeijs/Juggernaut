@@ -70,8 +70,11 @@ bool VulkanInstance::Create(const VulkanExtensions& extensions, const VulkanVali
 void VulkanInstance::Destroy() const
 {
 #if !NDEBUG
-	DebugMessenger->Destroy(Instance);
-	delete DebugMessenger;
+	if (DebugMessenger)
+	{
+		DebugMessenger->Destroy(Instance);
+		delete DebugMessenger;
+	}
 #endif
 
 	vkDestroyInstance(Instance, nullptr);

@@ -14,7 +14,8 @@ using namespace jnt;
 
 Renderer::Renderer() :
     Window(nullptr),
-    Instance(nullptr)
+    Instance(nullptr),
+    Device(nullptr)
 {}
 
 void Renderer::Run()
@@ -95,11 +96,17 @@ void Renderer::MainLoop()
 
 void Renderer::Cleanup()
 {
-    Device->Destroy();
-    delete Device;
+    if (Device)
+    {
+        Device->Destroy();
+        delete Device;
+    }
 
-    Instance->Destroy();
-	delete Instance;
+    if (Instance)
+    {
+        Instance->Destroy();
+        delete Instance;
+    }
 
     glfwDestroyWindow(Window);
     glfwTerminate();
