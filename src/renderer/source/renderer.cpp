@@ -2,6 +2,7 @@
 #include "vk/extensions.hpp"
 #include "vk/instance.hpp"
 #include "vk/validation_layers.hpp"
+#include "vk/device.hpp"
 #include "utility/console_output.hpp"
 
 #include "GLFW/glfw3.h"
@@ -56,6 +57,19 @@ void Renderer::InitVulkan()
     {
         ConsoleOutput::Error("Vulkan instance creation unsuccessful.");
     }
+
+    /************************************************************************/
+    /* Device creation                                                      */
+    /************************************************************************/
+    Device = new VulkanDevice();
+    if (Device->CreatePhysical(*Instance))
+    {
+        ConsoleOutput::Success("Suitable physical device found.");
+    }
+    else
+    {
+		ConsoleOutput::Error("No suitable physical devices found on this system.");
+    }
 }
 
 void Renderer::MainLoop()
@@ -68,6 +82,9 @@ void Renderer::MainLoop()
 
 void Renderer::Cleanup()
 {
+    Device->Destroy();
+    delete Device;
+
     Instance->Destroy();
 	delete Instance;
 
