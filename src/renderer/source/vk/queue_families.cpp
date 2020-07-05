@@ -42,3 +42,9 @@ bool VulkanQueueFamilies::IsComplete() const
 {
 	return GraphicsFamilyIndex.has_value();
 }
+
+const uint32_t VulkanQueueFamilies::GetGraphicsFamilyIndex() const
+{
+	// The queue should always have a value by the time this function is used
+	return *GraphicsFamilyIndex;
+}

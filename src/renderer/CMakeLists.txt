@@ -6,6 +6,7 @@ set(SOURCE_LIST
     include/vk/debug_messenger.hpp
     include/vk/device.hpp
     include/vk/queue_families.hpp
+    include/vk/queue.hpp
     include/utility/console_output.hpp
     source/renderer.cpp
     source/vk/instance.cpp
@@ -14,6 +15,7 @@ set(SOURCE_LIST
     source/vk/debug_messenger.cpp
     source/vk/device.cpp
     source/vk/queue_families.cpp
+    source/vk/queue.cpp
     source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})

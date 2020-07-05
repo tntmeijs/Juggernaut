@@ -1,6 +1,8 @@
 #include "vk/device.hpp"
 #include "vk/instance.hpp"
 #include "vk/queue_families.hpp"
+#include "vk/queue.hpp"
+#include "vk/validation_layers.hpp"
 #include "utility/console_output.hpp"
 
 #include <map>
@@ -86,25 +88,92 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 
 void VulkanDevice::FindQueueFamilies()
 {
-	QueueFamilies = new VulkanQueueFamilies();
-	QueueFamilies->Find(PhysicalDevice);
-
-	if (QueueFamilies->IsComplete())
+	if (!QueueFamilies)
 	{
-		ConsoleOutput::Success("Found all required queue families.");
+		QueueFamilies = new VulkanQueueFamilies();
+		QueueFamilies->Find(PhysicalDevice);
+
+		if (QueueFamilies->IsComplete())
+		{
+			ConsoleOutput::Success("Found all required queue families.");
+		}
+		else
+		{
+			ConsoleOutput::Error("Unable to find all required queue families.");
+		}
 	}
 	else
 	{
-		ConsoleOutput::Error("Unable to find all required queue families.");
+		ConsoleOutput::Error("Cannot create new queue families object, one already exists.");
+	}
+}
+
+bool VulkanDevice::CreateLogical(const VulkanValidationLayers& validationLayers)
+{
+	/************************************************************************/
+	/* Create queues                                                        */
+	/************************************************************************/
+	VkDeviceQueueCreateInfo queueCreateInfos[1];
+	queueCreateInfos[0] = VulkanQueue::Create(QueueFamilies->GetGraphicsFamilyIndex());
+
+	/************************************************************************/
+	/* Specify used device features                                         */
+	/************************************************************************/
+	VkPhysicalDeviceFeatures physicalDeviceFeatures = {};
+
+	/************************************************************************/
+	/* Create a logical device                                              */
+	/************************************************************************/
+	std::vector<const char*> validationLayerList = validationLayers.GetValidationLayers();
+
+	VkDeviceCreateInfo createInfo	= {};
+	createInfo.enabledLayerCount	= static_cast<uint32_t>(validationLayerList.size());
+	createInfo.pEnabledFeatures		= &physicalDeviceFeatures;
+	createInfo.ppEnabledLayerNames	= validationLayerList.data();
+	createInfo.pQueueCreateInfos	= queueCreateInfos;
+	createInfo.queueCreateInfoCount	= sizeof(queueCreateInfos) / sizeof(VkDeviceQueueCreateInfo);
+	createInfo.sType				= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+	return (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &LogicalDevice) == VK_SUCCESS);
+}
+
+void VulkanDevice::ConfigureQueueHandles()
+{
+	if (!GraphicsQueue)
+	{
+		VkQueue queue = VK_NULL_HANDLE;
+		vkGetDeviceQueue(LogicalDevice, QueueFamilies->GetGraphicsFamilyIndex(), 0, &queue);
+
+		GraphicsQueue = new VulkanQueue();
+		GraphicsQueue->Set(queue);
+	}
+	else
+	{
+		ConsoleOutput::Error("Cannot create a new graphics queue object, one already exists.");
 	}
 }
 
 void VulkanDevice::Destroy() const
 {
-	delete QueueFamilies;
+	vkDestroyDevice(LogicalDevice, nullptr);
+
+	if (QueueFamilies)
+	{
+		delete QueueFamilies;
+	}
+
+	if (GraphicsQueue)
+	{
+		delete GraphicsQueue;
+	}
 }
 
-const VkPhysicalDevice& VulkanDevice::GetPhysical() const
+const VkPhysicalDevice& VulkanDevice::GetGPU() const
 {
 	return PhysicalDevice;
+}
+
+const VkDevice& VulkanDevice::Get() const
+{
+	return LogicalDevice;
 }

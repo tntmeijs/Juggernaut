@@ -27,6 +27,13 @@ namespace jnt
          */
         bool IsComplete() const;
 
+        /**
+         * Retrieve the graphics family queue index
+         * 
+         * @return  Graphics queue family index
+         */
+        const uint32_t GetGraphicsFamilyIndex() const;
+
     private:
 		std::optional<uint32_t> GraphicsFamilyIndex;
     };

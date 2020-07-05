@@ -72,6 +72,17 @@ void Renderer::InitVulkan()
     }
 
     Device->FindQueueFamilies();
+    
+    if (Device->CreateLogical(validationLayers))
+    {
+        ConsoleOutput::Success("Logical device created successfully.");
+    }
+    else
+    {
+        ConsoleOutput::Error("Unable to create logical device.");
+    }
+
+    Device->ConfigureQueueHandles();
 }
 
 void Renderer::MainLoop()
