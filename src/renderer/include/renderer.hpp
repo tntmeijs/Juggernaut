@@ -6,6 +6,9 @@ struct GLFWwindow;
 
 namespace jnt
 {
+	// Juggernaut forward declarations
+	class VulkanInstance;
+
     class Renderer
     {
     public:
@@ -18,14 +21,14 @@ namespace jnt
 
         void InitVulkan();
 
-        void CreateInstance();
-
         void MainLoop();
 
         void Cleanup();
 
     private:
         GLFWwindow* Window;
+
+        VulkanInstance* Instance;
     };
 }
 

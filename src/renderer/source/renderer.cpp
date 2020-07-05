@@ -1,20 +1,19 @@
 #include "renderer.hpp"
+#include "vk/extensions.hpp"
+#include "vk/instance.hpp"
+#include "vk/validation_layers.hpp"
 
-#include "vulkan/vulkan.h"
-#include "glfw/glfw3.h"
+#include "GLFW/glfw3.h"
 
 #include <iostream>
-#include <vector>
+#include <stdexcept>
 
 using namespace jnt;
 
-VkInstance Instance;
-
 Renderer::Renderer() :
-    Window(nullptr)
-{
-    std::cout << "Juggernaut renderer" << std::endl;
-}
+    Window(nullptr),
+    Instance(nullptr)
+{}
 
 void Renderer::Run()
 {
@@ -31,76 +30,23 @@ void Renderer::InitWindow()
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    Window = glfwCreateWindow(800, 600, "Juggernaut", nullptr, nullptr);
+    Window = glfwCreateWindow(1280, 720, "Juggernaut", nullptr, nullptr);
 }
 
 void Renderer::InitVulkan()
 {
-    CreateInstance();
-}
+    VulkanExtensions extensions;
+    VulkanValidationLayers validationLayers;
 
-void Renderer::CreateInstance()
-{
-    VkApplicationInfo info = {};
-    info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    info.pApplicationName = "Juggernaut";
-    info.applicationVersion = VK_MAKE_VERSION(0, 1, 0);
-    info.pEngineName = "Juggernaut";
-    info.engineVersion = VK_MAKE_VERSION(0, 1, 0);
-    info.apiVersion = VK_API_VERSION_1_2;
+    validationLayers.AddValidationLayer("VK_LAYER_KHRONOS_validation");
 
-    uint32_t glfwExtensionCount = 0;
-    const char** glfwExtensions;
-
-    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-    VkInstanceCreateInfo create_info = {};
-    create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    create_info.pApplicationInfo = &info;
-    create_info.enabledExtensionCount = glfwExtensionCount;
-    create_info.ppEnabledExtensionNames = glfwExtensions;
-    create_info.enabledLayerCount = 0;
-
-    uint32_t extensionCount = 0;
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-    std::vector<VkExtensionProperties> extensions(extensionCount);
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
-
-    std::cout << "Extensions available on this system:" << std::endl;
-    uint32_t foundRequiredExtensionCount = 0;
-    for (const auto& extension : extensions)
+    Instance = new VulkanInstance("Juggernaut", "Juggernaut");
+    if (!Instance->Create(extensions, validationLayers))
     {
-        bool found = false;
-
-        for (uint32_t i = 0; i < glfwExtensionCount; ++i)
-        {
-            if (strcmp(glfwExtensions[i], extension.extensionName) == 0)
-            {
-                std::cout << "[REQUIRED]\t";
-
-                found = true;
-                ++foundRequiredExtensionCount;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            std::cout << "\t\t";
-        }
-
-        std::cout << extension.extensionName << std::endl;
+        throw std::runtime_error("Failed to create a Vulkan instance.");
     }
 
-    if (foundRequiredExtensionCount != glfwExtensionCount)
-    {
-        throw std::runtime_error("Not all required extensions are present on this system.");
-    }
-
-    if (vkCreateInstance(&create_info, nullptr, &Instance) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create instance!");
-    }
+    std::cout << "[INFO] Vulkan instance created successfully." << std::endl;
 }
 
 void Renderer::MainLoop()
@@ -113,7 +59,7 @@ void Renderer::MainLoop()
 
 void Renderer::Cleanup()
 {
-    vkDestroyInstance(Instance, nullptr);
+    Instance->Destroy();
 
     glfwDestroyWindow(Window);
     glfwTerminate();

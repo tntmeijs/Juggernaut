@@ -1,6 +1,12 @@
 set(SOURCE_LIST
     include/renderer.hpp
-    source/renderer.cpp)
+    include/vk/instance.hpp
+    include/vk/extensions.hpp
+    include/vk/validation_layers.hpp
+    source/renderer.cpp
+    source/vk/instance.cpp
+    source/vk/extensions.cpp
+    source/vk/validation_layers.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})
 target_include_directories(${RENDERER_NAME} PRIVATE include)
