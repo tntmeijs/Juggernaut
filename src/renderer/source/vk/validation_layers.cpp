@@ -1,9 +1,10 @@
 #include "vk/validation_layers.hpp"
+#include "utility/console_output.hpp"
 
 #include "vulkan/vulkan.h"
 
 #include <algorithm>
-#include <iostream>
+#include <string>
 
 using namespace jnt;
 
@@ -18,6 +19,11 @@ void VulkanValidationLayers::AddValidationLayer(std::string_view validationLayer
 	if (result == ValidationLayerNames.end())
 	{
 		ValidationLayerNames.push_back(validationLayerName.data());
+		ConsoleOutput::Info("Validation layer " + std::string(validationLayerName) + " has been added to the list.");
+	}
+	else
+	{
+		ConsoleOutput::Warning("Validation layer " + std::string(validationLayerName) + " has already been added to the list.");
 	}
 #endif
 }
@@ -26,7 +32,6 @@ bool jnt::VulkanValidationLayers::AllValidationLayersAvailable() const
 {
 	// Release mode does not have any validation layers
 #if NDEBUG
-	std::cout << "[INFO] No validation layers will be used in release mode." << std::endl;
 	return true;
 #endif
 
@@ -50,7 +55,16 @@ bool jnt::VulkanValidationLayers::AllValidationLayersAvailable() const
 			}
 		}
 
-		std::cout << (found ? "[SUCCESS] Found" : "[FATAL] Missing") << " required validation layer: " << layerName << std::endl;
+		if (found)
+		{
+			std::string message = "Found required validation layer: " + std::string(layerName);
+			ConsoleOutput::Info(message);
+		}
+		else
+		{
+			std::string message = "Missing required validation layer: " + std::string(layerName);
+			ConsoleOutput::Error(message);
+		}
 	}
 
 	return (layersFound == ValidationLayerNames.size());

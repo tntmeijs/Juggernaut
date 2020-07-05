@@ -1,10 +1,11 @@
 #include "vk/extensions.hpp"
+#include "utility/console_output.hpp"
 
 #include "vulkan/vulkan.h"
 #include "GLFW/glfw3.h"
 
 #include <algorithm>
-#include <iostream>
+#include <string>
 
 using namespace jnt;
 
@@ -40,7 +41,16 @@ bool VulkanExtensions::AllExtensionsAvailable() const
 			}
 		}
 
-		std::cout << (found ? "[SUCCESS] Found" : "[FATAL] Missing") << " required extension: " << extensionName << std::endl;
+		if (found)
+		{
+			std::string message = "Found required extension: " + std::string(extensionName);
+			ConsoleOutput::Info(message);
+		}
+		else
+		{
+			std::string message = "Missing required extension: " + std::string(extensionName);
+			ConsoleOutput::Error(message);
+		}
 	}
 	
 	return (extensionsFound == requiredExtensions.size());

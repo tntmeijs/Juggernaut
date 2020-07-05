@@ -2,6 +2,7 @@
 #include "vk/extensions.hpp"
 #include "vk/instance.hpp"
 #include "vk/validation_layers.hpp"
+#include "utility/console_output.hpp"
 
 #include "GLFW/glfw3.h"
 
@@ -46,7 +47,7 @@ void Renderer::InitVulkan()
         throw std::runtime_error("Failed to create a Vulkan instance.");
     }
 
-    std::cout << "[INFO] Vulkan instance created successfully." << std::endl;
+	ConsoleOutput::Success("Vulkan instance created successfully.");
 }
 
 void Renderer::MainLoop()

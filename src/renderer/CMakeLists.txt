@@ -3,10 +3,12 @@ set(SOURCE_LIST
     include/vk/instance.hpp
     include/vk/extensions.hpp
     include/vk/validation_layers.hpp
+    include/utility/console_output.hpp
     source/renderer.cpp
     source/vk/instance.cpp
     source/vk/extensions.cpp
-    source/vk/validation_layers.cpp)
+    source/vk/validation_layers.cpp
+    source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})
 target_include_directories(${RENDERER_NAME} PRIVATE include)

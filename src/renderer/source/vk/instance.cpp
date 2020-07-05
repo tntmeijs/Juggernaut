@@ -1,8 +1,7 @@
 #include "vk/extensions.hpp"
 #include "vk/instance.hpp"
 #include "vk/validation_layers.hpp"
-
-#include <iostream>
+#include "utility/console_output.hpp"
 
 using namespace jnt;
 
@@ -17,13 +16,13 @@ bool VulkanInstance::Create(const VulkanExtensions& extensions, const VulkanVali
 {
 	if (!extensions.AllExtensionsAvailable())
 	{
-		std::cerr << "Not all required extensions are available on this system." << std::endl;
+		ConsoleOutput::Error("Not all required extensions are available on this system.");
 		return false;
 	}
 
 	if (!validationLayers.AllValidationLayersAvailable())
 	{
-		std::cerr << "Not all required validation layers are available on this system." << std::endl;
+		ConsoleOutput::Error("Not all required validation layers are available on this system.");
 		return false;
 	}
 
