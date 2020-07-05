@@ -11,6 +11,7 @@ namespace jnt
 	// Juggernaut forward declarations
 	class VulkanExtensions;
 	class VulkanValidationLayers;
+	class VulkanDebugMessenger;
 
 	/**
 	 * Vulkan instance wrapper
@@ -40,6 +41,11 @@ namespace jnt
 		 */
 		void Destroy() const;
 
+		/**
+		 * Retrieve a reference to the internal Vulkan object that backs this wrapper
+		 */
+		const VkInstance& Get() const;
+
 	private:
 		/**
 		 * Helper function to construct a VkApplicationInfo structure
@@ -62,6 +68,8 @@ namespace jnt
 		std::string EngineName;
 
 		VkInstance Instance;
+
+		VulkanDebugMessenger* DebugMessenger;
 	};
 }
 

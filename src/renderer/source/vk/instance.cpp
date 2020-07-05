@@ -1,3 +1,4 @@
+#include "vk/debug_messenger.hpp"
 #include "vk/extensions.hpp"
 #include "vk/instance.hpp"
 #include "vk/validation_layers.hpp"
@@ -8,7 +9,8 @@ using namespace jnt;
 VulkanInstance::VulkanInstance(std::string_view applicationName, std::string_view engineName) :
 	ApplicationName(applicationName),
 	EngineName(engineName),
-	Instance(nullptr)
+	Instance(nullptr),
+	DebugMessenger(nullptr)
 {
 }
 
@@ -34,12 +36,50 @@ bool VulkanInstance::Create(const VulkanExtensions& extensions, const VulkanVali
 
 	createInfo.pApplicationInfo = &appInfo;
 
-	return (vkCreateInstance(&createInfo, nullptr, &Instance) == VK_SUCCESS);
+#if !NDEBUG
+	/************************************************************************/
+	/* Debug messenger initialization (ALWAYS BEFORE INSTANCE CREATION)     */
+	/************************************************************************/
+	DebugMessenger = new VulkanDebugMessenger();
+	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = DebugMessenger->Initialize();
+#endif
+
+	// Create the instance
+	bool instanceResult = (vkCreateInstance(&createInfo, nullptr, &Instance) == VK_SUCCESS);
+
+#if !NDEBUG
+	/************************************************************************/
+	/* Debug messenger creation (ALWAYS AFTER INSTANCE CREATION             */
+	/************************************************************************/
+	if (DebugMessenger->Create(Instance, debugCreateInfo))
+	{
+		ConsoleOutput::Success("Debug messenger created successfully.");
+
+		// Register to any instance creation errors
+		createInfo.pNext = reinterpret_cast<VkDebugUtilsMessengerCreateInfoEXT*>(&debugCreateInfo);
+	}
+	else
+	{
+		ConsoleOutput::Error("Debug messenger creation unsuccessful.");
+	}
+#endif
+
+	return instanceResult;
 }
 
 void VulkanInstance::Destroy() const
 {
+#if !NDEBUG
+	DebugMessenger->Destroy(Instance);
+	delete DebugMessenger;
+#endif
+
 	vkDestroyInstance(Instance, nullptr);
+}
+
+const VkInstance& VulkanInstance::Get() const
+{
+	return Instance;
 }
 
 VkApplicationInfo VulkanInstance::ConstructApplicationInfo() const
