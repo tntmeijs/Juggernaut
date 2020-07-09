@@ -7,6 +7,7 @@ set(SOURCE_LIST
     include/vk/device.hpp
     include/vk/queue_families.hpp
     include/vk/queue.hpp
+    include/vk/window_surface.hpp
     include/utility/console_output.hpp
     source/renderer.cpp
     source/vk/instance.cpp
@@ -16,6 +17,7 @@ set(SOURCE_LIST
     source/vk/device.cpp
     source/vk/queue_families.cpp
     source/vk/queue.cpp
+    source/vk/window_surface.cpp
     source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})

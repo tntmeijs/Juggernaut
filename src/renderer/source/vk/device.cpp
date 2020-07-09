@@ -3,9 +3,11 @@
 #include "vk/queue_families.hpp"
 #include "vk/queue.hpp"
 #include "vk/validation_layers.hpp"
+#include "vk/window_surface.hpp"
 #include "utility/console_output.hpp"
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -86,12 +88,12 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 	return false;
 }
 
-void VulkanDevice::FindQueueFamilies()
+void VulkanDevice::FindQueueFamilies(const VulkanWindowSurface& windowSurface)
 {
 	if (!QueueFamilies)
 	{
 		QueueFamilies = new VulkanQueueFamilies();
-		QueueFamilies->Find(PhysicalDevice);
+		QueueFamilies->Find(PhysicalDevice, windowSurface.Get());
 
 		if (QueueFamilies->IsComplete())
 		{
@@ -113,8 +115,14 @@ bool VulkanDevice::CreateLogical(const VulkanValidationLayers& validationLayers)
 	/************************************************************************/
 	/* Create queues                                                        */
 	/************************************************************************/
-	VkDeviceQueueCreateInfo queueCreateInfos[1];
-	queueCreateInfos[0] = VulkanQueue::Create(QueueFamilies->GetGraphicsFamilyIndex());
+	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+	std::set<uint32_t> uniqueQueueIndices = { QueueFamilies->GetGraphicsFamilyIndex(), QueueFamilies->GetPresentationFamilyIndex() };
+
+	for (const uint32_t queueFamilyIndex : uniqueQueueIndices)
+	{
+		VkDeviceQueueCreateInfo createInfo = VulkanQueue::Create(queueFamilyIndex);
+		queueCreateInfos.push_back(createInfo);
+	}
 
 	/************************************************************************/
 	/* Specify used device features                                         */
@@ -130,8 +138,8 @@ bool VulkanDevice::CreateLogical(const VulkanValidationLayers& validationLayers)
 	createInfo.enabledLayerCount	= static_cast<uint32_t>(validationLayerList.size());
 	createInfo.pEnabledFeatures		= &physicalDeviceFeatures;
 	createInfo.ppEnabledLayerNames	= validationLayerList.data();
-	createInfo.pQueueCreateInfos	= queueCreateInfos;
-	createInfo.queueCreateInfoCount	= sizeof(queueCreateInfos) / sizeof(VkDeviceQueueCreateInfo);
+	createInfo.pQueueCreateInfos	= queueCreateInfos.data();
+	createInfo.queueCreateInfoCount	= static_cast<uint32_t>(queueCreateInfos.size());
 	createInfo.sType				= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
 	return (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &LogicalDevice) == VK_SUCCESS);
@@ -150,6 +158,19 @@ void VulkanDevice::ConfigureQueueHandles()
 	else
 	{
 		ConsoleOutput::Error("Cannot create a new graphics queue object, one already exists.");
+	}
+
+	if (!PresentationQueue)
+	{
+		VkQueue queue = VK_NULL_HANDLE;
+		vkGetDeviceQueue(LogicalDevice, QueueFamilies->GetPresentationFamilyIndex(), 0, &queue);
+
+		PresentationQueue = new VulkanQueue();
+		PresentationQueue->Set(queue);
+	}
+	else
+	{
+		ConsoleOutput::Error("Cannot create a new presentation queue object, one already exists.");
 	}
 }
 

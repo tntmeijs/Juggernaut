@@ -41,12 +41,7 @@ bool VulkanExtensions::AllExtensionsAvailable() const
 			}
 		}
 
-		if (found)
-		{
-			std::string message = "Found required extension: " + std::string(extensionName);
-			ConsoleOutput::Info(message);
-		}
-		else
+		if (!found)
 		{
 			std::string message = "Missing required extension: " + std::string(extensionName);
 			ConsoleOutput::Error(message);

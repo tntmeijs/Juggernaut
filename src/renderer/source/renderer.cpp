@@ -3,9 +3,14 @@
 #include "vk/instance.hpp"
 #include "vk/validation_layers.hpp"
 #include "vk/device.hpp"
+#include "vk/window_surface.hpp"
 #include "utility/console_output.hpp"
 
+#if _WINDOWS
+#define GLFW_EXPOSE_NATIVE_WIN32
+#endif
 #include "GLFW/glfw3.h"
+#include "GLFW/glfw3native.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -60,6 +65,23 @@ void Renderer::InitVulkan()
     }
 
     /************************************************************************/
+    /* Window surface creation                                              */
+    /************************************************************************/
+#if _WINDOWS
+    WindowSurface = new VulkanWindowSurface();
+    if (WindowSurface->Create(*Instance, glfwGetWin32Window(Window)))
+    {
+        ConsoleOutput::Success("Vulkan window surface created successfully.");
+    }
+    else
+    {
+		ConsoleOutput::Error("Vulkan window surface creation unsuccessful.");
+    }
+#else
+    ConsoleOutput::Error("THIS PLATFORM DOES NOT SUPPORT WINDOW CREATION YET");
+#endif
+
+    /************************************************************************/
     /* Device creation                                                      */
     /************************************************************************/
     Device = new VulkanDevice();
@@ -72,7 +94,7 @@ void Renderer::InitVulkan()
 		ConsoleOutput::Error("No suitable physical devices found on this system.");
     }
 
-    Device->FindQueueFamilies();
+    Device->FindQueueFamilies(*WindowSurface);
     
     if (Device->CreateLogical(validationLayers))
     {
@@ -100,13 +122,22 @@ void Renderer::Cleanup()
     {
         Device->Destroy();
         delete Device;
+		ConsoleOutput::Success("Device deleted.");
+	}
+
+    if (WindowSurface)
+    {
+        WindowSurface->Destroy(*Instance);
+        delete WindowSurface;
+		ConsoleOutput::Success("Window surface deleted.");
     }
 
     if (Instance)
     {
         Instance->Destroy();
         delete Instance;
-    }
+		ConsoleOutput::Success("Instance deleted.");
+	}
 
     glfwDestroyWindow(Window);
     glfwTerminate();

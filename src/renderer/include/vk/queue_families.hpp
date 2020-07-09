@@ -17,8 +17,9 @@ namespace jnt
          * Find the best queue family indices for this application
          * 
          * @param   physicalDevice  Physical device to look for queues on
+         * @param   surface         Surface to render to
          */
-        void Find(const VkPhysicalDevice& physicalDevice);
+        void Find(const VkPhysicalDevice& physicalDevice, const VkSurfaceKHR& surface);
 
         /**
          * Check if all queue families have been found
@@ -34,8 +35,16 @@ namespace jnt
          */
         const uint32_t GetGraphicsFamilyIndex() const;
 
+        /**
+         * Retrieve the presentation family queue index
+         *
+         * @return  Presentation queue family index
+         */
+        const uint32_t GetPresentationFamilyIndex() const;
+
     private:
 		std::optional<uint32_t> GraphicsFamilyIndex;
+        std::optional<uint32_t> PresentationFamilyIndex;
     };
 }
 

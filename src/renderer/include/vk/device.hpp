@@ -10,6 +10,7 @@ namespace jnt
     class VulkanQueueFamilies;
     class VulkanValidationLayers;
     class VulkanQueue;
+    class VulkanWindowSurface;
 
     /**
      * Wrapper class that makes it possible to interface with logical and physical
@@ -28,8 +29,10 @@ namespace jnt
 
         /**
          * Find all relevant queue family indices
+         * 
+         * @param   windowSurface   Window surface wrapper object
          */
-        void FindQueueFamilies();
+        void FindQueueFamilies(const VulkanWindowSurface& windowSurface);
 
         /**
          * Create a new logical device
@@ -69,6 +72,7 @@ namespace jnt
 
         VulkanQueueFamilies* QueueFamilies;
         VulkanQueue* GraphicsQueue;
+        VulkanQueue* PresentationQueue;
     };
 }
 

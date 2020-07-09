@@ -55,12 +55,7 @@ bool jnt::VulkanValidationLayers::AllValidationLayersAvailable() const
 			}
 		}
 
-		if (found)
-		{
-			std::string message = "Found required validation layer: " + std::string(layerName);
-			ConsoleOutput::Info(message);
-		}
-		else
+		if (!found)
 		{
 			std::string message = "Missing required validation layer: " + std::string(layerName);
 			ConsoleOutput::Error(message);

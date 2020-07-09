@@ -47,12 +47,8 @@ VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugMessenger::ValidationLayerDebugCallbac
 	userData;
 	type;
 
-	// Handle all messages except those with a severity of "verbose"
-	if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
-	{
-		ConsoleOutput::Info(data->pMessage);
-	}
-	else if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	// Handle all messages except those with a severity of "verbose" or "info"
+	if (severity == VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		ConsoleOutput::Warning(data->pMessage);
 	}

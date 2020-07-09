@@ -9,6 +9,7 @@ namespace jnt
 	// Juggernaut forward declarations
 	class VulkanInstance;
     class VulkanDevice;
+    class VulkanWindowSurface;
 
     class Renderer
     {
@@ -31,6 +32,7 @@ namespace jnt
 
         VulkanInstance* Instance;
         VulkanDevice* Device;
+        VulkanWindowSurface* WindowSurface;
     };
 }
 
