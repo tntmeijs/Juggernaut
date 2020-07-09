@@ -3,6 +3,9 @@
 
 #include "vulkan/vulkan.h"
 
+#include <string_view>
+#include <vector>
+
 namespace jnt
 {
     // Juggernaut forward declarations
@@ -48,6 +51,13 @@ namespace jnt
         void ConfigureQueueHandles();
 
         /**
+         * Register a new device extension
+         * 
+         * @param   extensionName   Name of the device extension to use
+         */
+        void AddExtension(std::string_view extensionName);
+
+        /**
          * Destroy the device and all relevant objects
          */
         void Destroy() const;
@@ -73,6 +83,8 @@ namespace jnt
         VulkanQueueFamilies* QueueFamilies;
         VulkanQueue* GraphicsQueue;
         VulkanQueue* PresentationQueue;
+
+        std::vector<const char*> DeviceExtensions;
     };
 }
 

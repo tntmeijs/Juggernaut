@@ -85,7 +85,9 @@ void Renderer::InitVulkan()
     /* Device creation                                                      */
     /************************************************************************/
     Device = new VulkanDevice();
-    if (Device->CreatePhysical(*Instance))
+	Device->AddExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
+	if (Device->CreatePhysical(*Instance))
     {
         ConsoleOutput::Success("Suitable physical device found.");
     }
@@ -95,7 +97,7 @@ void Renderer::InitVulkan()
     }
 
     Device->FindQueueFamilies(*WindowSurface);
-    
+
     if (Device->CreateLogical(validationLayers))
     {
         ConsoleOutput::Success("Logical device created successfully.");

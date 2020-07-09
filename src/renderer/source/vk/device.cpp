@@ -9,7 +9,6 @@
 #include <map>
 #include <set>
 #include <string>
-#include <vector>
 
 using namespace jnt;
 
@@ -35,10 +34,11 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 	/************************************************************************/
 	/* Sort devices from best to worst                                      */
 	/************************************************************************/
-	std::multimap<uint64_t, VkPhysicalDevice> deviceScores;
+	std::multimap<int64_t, VkPhysicalDevice> deviceScores;
+	uint32_t deviceScoreDeviceCount = 0;
 	for (const auto& physicalDevice : physicalDevices)
 	{
-		uint64_t score = 0;
+		int64_t score = 0;
 		VkPhysicalDeviceProperties deviceProperties		= {};
 		VkPhysicalDeviceFeatures deviceFeatures			= {};
 		VkPhysicalDeviceMemoryProperties deviceMemory	= {};
@@ -70,18 +70,49 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 		// Prefer high VRAM
 		score += deviceMemory.memoryHeaps[0].size;
 
-		// Save this score and the device that belongs to it
-		deviceScores.insert(std::make_pair(score, physicalDevice));
+		// Check if all device extensions are present
+		uint32_t extensionCount = 0;
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+		// Ensure no duplicate extensions names exist
+		std::set<std::string> uniqueExtensions(DeviceExtensions.begin(), DeviceExtensions.end());
+
+		for (const auto& extension : availableExtensions)
+		{
+			// Remove each found extension
+			uniqueExtensions.erase(extension.extensionName);
+		}
+
+		// All required device extensions were found
+		if (uniqueExtensions.empty())
+		{
+			// Save this score and the device that belongs to it
+			deviceScores.insert(std::make_pair(score, physicalDevice));
+			++deviceScoreDeviceCount;
+		}
+		else
+		{
+			ConsoleOutput::Error("\"" + std::string(deviceProperties.deviceName) + "\" is unsuitable, could not find these required device extensions:");
+			for (const auto& name : uniqueExtensions)
+			{
+				ConsoleOutput::Error("  - " + name);
+			}
+		}
 	}
 
 	/************************************************************************/
 	/* Select the best physical device                                      */
 	/************************************************************************/
-	if (deviceScores.rbegin()->first > 0)
+	if (deviceScoreDeviceCount > 0)
 	{
-		// Found a suitable physical device
-		PhysicalDevice = deviceScores.rbegin()->second;
-		return true;
+		if (deviceScores.rbegin()->first > 0)
+		{
+			// Found a suitable physical device
+			PhysicalDevice = deviceScores.rbegin()->second;
+			return true;
+		}
 	}
 
 	// No suitable physical devices found
@@ -134,13 +165,15 @@ bool VulkanDevice::CreateLogical(const VulkanValidationLayers& validationLayers)
 	/************************************************************************/
 	std::vector<const char*> validationLayerList = validationLayers.GetValidationLayers();
 
-	VkDeviceCreateInfo createInfo	= {};
-	createInfo.enabledLayerCount	= static_cast<uint32_t>(validationLayerList.size());
-	createInfo.pEnabledFeatures		= &physicalDeviceFeatures;
-	createInfo.ppEnabledLayerNames	= validationLayerList.data();
-	createInfo.pQueueCreateInfos	= queueCreateInfos.data();
-	createInfo.queueCreateInfoCount	= static_cast<uint32_t>(queueCreateInfos.size());
-	createInfo.sType				= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	VkDeviceCreateInfo createInfo		= {};
+	createInfo.enabledExtensionCount	= static_cast<uint32_t>(DeviceExtensions.size());
+	createInfo.enabledLayerCount		= static_cast<uint32_t>(validationLayerList.size());
+	createInfo.queueCreateInfoCount		= static_cast<uint32_t>(queueCreateInfos.size());
+	createInfo.ppEnabledLayerNames		= validationLayerList.data();
+	createInfo.ppEnabledExtensionNames	= DeviceExtensions.data();
+	createInfo.pQueueCreateInfos		= queueCreateInfos.data();
+	createInfo.pEnabledFeatures			= &physicalDeviceFeatures;
+	createInfo.sType					= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 
 	return (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &LogicalDevice) == VK_SUCCESS);
 }
@@ -172,6 +205,11 @@ void VulkanDevice::ConfigureQueueHandles()
 	{
 		ConsoleOutput::Error("Cannot create a new presentation queue object, one already exists.");
 	}
+}
+
+void VulkanDevice::AddExtension(std::string_view extensionName)
+{
+	DeviceExtensions.push_back(extensionName.data());
 }
 
 void VulkanDevice::Destroy() const
