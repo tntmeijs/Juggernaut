@@ -3,6 +3,11 @@
 
 using namespace jnt;
 
+JuggernautRenderer::JuggernautRenderer() :
+	OutputWidth(0),
+	OutputHeight(0)
+{}
+
 void JuggernautRenderer::Initialize(std::uint32_t outputWidth, std::uint32_t outputHeight)
 {
 	OutputWidth = outputWidth;

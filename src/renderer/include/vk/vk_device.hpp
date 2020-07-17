@@ -23,6 +23,11 @@ namespace jnt
     {
     public:
         /**
+         * Assign default values to members
+         */
+        VulkanDevice();
+
+        /**
          * Create a new physical device using the best possible GPU available
          * 
          * @param   instance        Vulkan instance

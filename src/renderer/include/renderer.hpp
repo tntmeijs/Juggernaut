@@ -14,6 +14,11 @@ namespace jnt
 	{
 	public:
 		/**
+		 * Assign default values to members
+		 */
+		JuggernautRenderer();
+
+		/**
 		 * Initialize a new renderer
 		 * 
 		 * @param	outputWidth		Horizontal output resolution

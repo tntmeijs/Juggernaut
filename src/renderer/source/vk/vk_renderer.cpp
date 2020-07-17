@@ -18,6 +18,14 @@
 
 using namespace jnt;
 
+VulkanRenderer::VulkanRenderer() :
+    Window(nullptr),
+    Instance(nullptr),
+    Device(nullptr),
+    WindowSurface(nullptr),
+    Swapchain(nullptr)
+{}
+
 bool VulkanRenderer::Create()
 {
 	InitWindow();

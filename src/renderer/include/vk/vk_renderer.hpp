@@ -18,6 +18,11 @@ namespace jnt
     {
     public:
         /**
+         * Assign default values to members
+         */
+        VulkanRenderer();
+
+        /**
          * Create a new Vulkan renderer
          * 
          * @return	True when the renderer was created successfully, false otherwise

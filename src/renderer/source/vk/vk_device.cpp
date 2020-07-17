@@ -13,6 +13,14 @@
 
 using namespace jnt;
 
+VulkanDevice::VulkanDevice() :
+	PhysicalDevice(VK_NULL_HANDLE),
+	LogicalDevice(VK_NULL_HANDLE),
+	QueueFamilies(nullptr),
+	GraphicsQueue(nullptr),
+	PresentationQueue(nullptr)
+{}
+
 bool VulkanDevice::CreatePhysical(const VulkanInstance& instance, const VulkanWindowSurface& windowSurface)
 {
 	/************************************************************************/
