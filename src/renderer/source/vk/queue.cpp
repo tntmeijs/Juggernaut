@@ -2,7 +2,7 @@
 
 using namespace jnt;
 
-VkDeviceQueueCreateInfo VulkanQueue::Create(uint32_t familyIndex, uint32_t count, float priority)
+VkDeviceQueueCreateInfo VulkanQueue::Create(std::uint32_t familyIndex, std::uint32_t count, float priority)
 {
 	VkDeviceQueueCreateInfo createInfo	= {};
 	createInfo.pQueuePriorities			= &priority;

@@ -3,6 +3,7 @@
 
 #include "vulkan/vulkan.h"
 
+#include <cstdint>
 #include <optional>
 
 namespace jnt
@@ -33,18 +34,18 @@ namespace jnt
          * 
          * @return  Graphics queue family index
          */
-        const uint32_t GetGraphicsFamilyIndex() const;
+        const std::uint32_t GetGraphicsFamilyIndex() const;
 
         /**
          * Retrieve the presentation family queue index
          *
          * @return  Presentation queue family index
          */
-        const uint32_t GetPresentationFamilyIndex() const;
+        const std::uint32_t GetPresentationFamilyIndex() const;
 
     private:
-		std::optional<uint32_t> GraphicsFamilyIndex;
-        std::optional<uint32_t> PresentationFamilyIndex;
+		std::optional<std::uint32_t> GraphicsFamilyIndex;
+        std::optional<std::uint32_t> PresentationFamilyIndex;
     };
 }
 

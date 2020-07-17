@@ -3,6 +3,8 @@
 
 #include "vulkan/vulkan.h"
 
+#include <cstdint>
+
 namespace jnt
 {
     /**
@@ -19,7 +21,7 @@ namespace jnt
          * @param   priority        Command buffer execution scheduling priority
          * @return  Queue create information structure
          */
-        static VkDeviceQueueCreateInfo Create(uint32_t familyIndex, uint32_t count = 1, float priority = 1.0f);
+        static VkDeviceQueueCreateInfo Create(std::uint32_t familyIndex, std::uint32_t count = 1, float priority = 1.0f);
 
         /**
          * Save a queue handle
