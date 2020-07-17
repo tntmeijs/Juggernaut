@@ -8,6 +8,7 @@ set(SOURCE_LIST
     include/vk/queue_families.hpp
     include/vk/queue.hpp
     include/vk/window_surface.hpp
+    include/vk/swapchain.hpp
     include/utility/console_output.hpp
     source/renderer.cpp
     source/vk/instance.cpp
@@ -18,6 +19,7 @@ set(SOURCE_LIST
     source/vk/queue_families.cpp
     source/vk/queue.cpp
     source/vk/window_surface.cpp
+    source/vk/swapchain.cpp
     source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})

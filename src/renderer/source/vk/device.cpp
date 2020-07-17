@@ -4,6 +4,7 @@
 #include "vk/queue.hpp"
 #include "vk/validation_layers.hpp"
 #include "vk/window_surface.hpp"
+#include "vk/swapchain.hpp"
 #include "utility/console_output.hpp"
 
 #include <map>
@@ -12,7 +13,7 @@
 
 using namespace jnt;
 
-bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
+bool VulkanDevice::CreatePhysical(const VulkanInstance& instance, const VulkanWindowSurface& windowSurface)
 {
 	/************************************************************************/
 	/* Enumerate physical devices                                           */
@@ -85,8 +86,11 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 			uniqueExtensions.erase(extension.extensionName);
 		}
 
-		// All required device extensions were found
-		if (uniqueExtensions.empty())
+		// Ensure the device supports the requirements of the swapchain
+		VulkanSwapchainSupportDetails swapchainSupport = VulkanSwapchain::QuerySwapchainSupport(physicalDevice, windowSurface.Get());
+
+		// All required device extensions were found and the swapchain support is adequate
+		if (uniqueExtensions.empty() && VulkanSwapchain::SwapchainSupportOk(swapchainSupport))
 		{
 			// Save this score and the device that belongs to it
 			deviceScores.insert(std::make_pair(score, physicalDevice));
@@ -119,26 +123,17 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance)
 	return false;
 }
 
-void VulkanDevice::FindQueueFamilies(const VulkanWindowSurface& windowSurface)
+bool VulkanDevice::FindQueueFamilies(const VulkanWindowSurface& windowSurface)
 {
-	if (!QueueFamilies)
+	if (QueueFamilies)
 	{
-		QueueFamilies = new VulkanQueueFamilies();
-		QueueFamilies->Find(PhysicalDevice, windowSurface.Get());
+		delete QueueFamilies;
+	}
 
-		if (QueueFamilies->IsComplete())
-		{
-			ConsoleOutput::Success("Found all required queue families.");
-		}
-		else
-		{
-			ConsoleOutput::Error("Unable to find all required queue families.");
-		}
-	}
-	else
-	{
-		ConsoleOutput::Error("Cannot create new queue families object, one already exists.");
-	}
+	QueueFamilies = new VulkanQueueFamilies();
+
+	QueueFamilies->Find(PhysicalDevice, windowSurface.Get());
+	return QueueFamilies->IsComplete();
 }
 
 bool VulkanDevice::CreateLogical(const VulkanValidationLayers& validationLayers)
@@ -235,4 +230,9 @@ const VkPhysicalDevice& VulkanDevice::GetGPU() const
 const VkDevice& VulkanDevice::Get() const
 {
 	return LogicalDevice;
+}
+
+const VulkanQueueFamilies& VulkanDevice::GetQueueFamilies() const
+{
+	return *QueueFamilies;
 }

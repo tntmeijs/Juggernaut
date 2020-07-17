@@ -2,7 +2,7 @@
 
 int main()
 {
-    jnt::Renderer renderer;
+    jnt::Renderer renderer(1280, 720);
 	renderer.Run();
 
     return 0;

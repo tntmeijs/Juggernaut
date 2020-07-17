@@ -2,6 +2,8 @@
 #define JUGGERNAUT_VK_WINDOW_SURFACE_HPP
 
 #if _WINDOWS
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <Windows.h>
 #endif

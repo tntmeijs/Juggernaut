@@ -25,17 +25,19 @@ namespace jnt
         /**
          * Create a new physical device using the best possible GPU available
          * 
-         * @param   instance    Vulkan instance
+         * @param   instance        Vulkan instance
+         * @param   windowSurface   Vulkan window surface
          * @return  True when the physical device was created successfully, false otherwise
          */
-        bool CreatePhysical(const VulkanInstance& instance);
+        bool CreatePhysical(const VulkanInstance& instance, const VulkanWindowSurface& windowSurface);
 
         /**
          * Find all relevant queue family indices
          * 
          * @param   windowSurface   Window surface wrapper object
+         * @return  True when all queue family indices have been found, false otherwise
          */
-        void FindQueueFamilies(const VulkanWindowSurface& windowSurface);
+        bool FindQueueFamilies(const VulkanWindowSurface& windowSurface);
 
         /**
          * Create a new logical device
@@ -75,6 +77,13 @@ namespace jnt
          * @return  Logical device object
          */
         const VkDevice& Get() const;
+
+        /**
+         * Retrieve the Vulkan queue families wrapper object
+         * 
+         * @return  Queue families wrapper object
+         */
+        const VulkanQueueFamilies& GetQueueFamilies() const;
 
     private:
         VkPhysicalDevice PhysicalDevice;

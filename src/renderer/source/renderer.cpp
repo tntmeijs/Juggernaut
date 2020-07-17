@@ -4,6 +4,7 @@
 #include "vk/validation_layers.hpp"
 #include "vk/device.hpp"
 #include "vk/window_surface.hpp"
+#include "vk/swapchain.hpp"
 #include "utility/console_output.hpp"
 
 #if _WINDOWS
@@ -17,10 +18,14 @@
 
 using namespace jnt;
 
-Renderer::Renderer() :
+Renderer::Renderer(std::uint32_t width, std::uint32_t height) :
+    Width(width),
+    Height(height),
     Window(nullptr),
     Instance(nullptr),
-    Device(nullptr)
+    Device(nullptr),
+    WindowSurface(nullptr),
+    Swapchain(nullptr)
 {}
 
 void Renderer::Run()
@@ -38,7 +43,7 @@ void Renderer::InitWindow()
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    Window = glfwCreateWindow(1280, 720, "Juggernaut", nullptr, nullptr);
+    Window = glfwCreateWindow(Width, Height, "Juggernaut", nullptr, nullptr);
 }
 
 void Renderer::InitVulkan()
@@ -87,7 +92,7 @@ void Renderer::InitVulkan()
     Device = new VulkanDevice();
 	Device->AddExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
-	if (Device->CreatePhysical(*Instance))
+	if (Device->CreatePhysical(*Instance, *WindowSurface))
     {
         ConsoleOutput::Success("Suitable physical device found.");
     }
@@ -96,7 +101,14 @@ void Renderer::InitVulkan()
 		ConsoleOutput::Error("No suitable physical devices found on this system.");
     }
 
-    Device->FindQueueFamilies(*WindowSurface);
+    if (Device->FindQueueFamilies(*WindowSurface))
+    {
+		ConsoleOutput::Success("Found all required queue families.");
+    }
+    else
+    {
+		ConsoleOutput::Error("Unable to find all required queue families.");
+    }
 
     if (Device->CreateLogical(validationLayers))
     {
@@ -108,6 +120,19 @@ void Renderer::InitVulkan()
     }
 
     Device->ConfigureQueueHandles();
+
+    /************************************************************************/
+    /* Swapchain creation                                                   */
+    /************************************************************************/
+    Swapchain = new VulkanSwapchain(Width, Height);
+    if (Swapchain->Create(*Device, *WindowSurface))
+    {
+        ConsoleOutput::Success("Swapchain created successfully.");
+    }
+    else
+    {
+        ConsoleOutput::Error("Unable to create swapchain.");
+    }
 }
 
 void Renderer::MainLoop()
@@ -120,6 +145,13 @@ void Renderer::MainLoop()
 
 void Renderer::Cleanup()
 {
+    if (Swapchain)
+    {
+        Swapchain->Destroy(*Device);
+        delete Swapchain;
+        ConsoleOutput::Success("Swapchain deleted.");
+    }
+
     if (Device)
     {
         Device->Destroy();
