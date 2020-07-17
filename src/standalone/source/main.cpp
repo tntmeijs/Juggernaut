@@ -3,7 +3,7 @@
 int main()
 {
     // Construct a new renderer
-    jnt::JuggernautRenderer* renderer = jnt::JuggernautRenderer::New(jnt::GraphicsAPI::Vulkan);
+    auto renderer = jnt::JuggernautRenderer::New(jnt::GraphicsAPI::Vulkan);
     renderer->Initialize(1280, 720);
     
     // Attempt to create a new renderer

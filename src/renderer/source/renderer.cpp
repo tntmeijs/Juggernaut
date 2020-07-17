@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "vk/vk_renderer.hpp"
+#include "utility/console_output.hpp"
 
 using namespace jnt;
 
@@ -16,17 +17,17 @@ void JuggernautRenderer::Initialize(std::uint32_t outputWidth, std::uint32_t out
 	PostInitialize();
 }
 
-JuggernautRenderer* JuggernautRenderer::New(GraphicsAPI api)
+std::unique_ptr<JuggernautRenderer> JuggernautRenderer::New(GraphicsAPI api)
 {
-	JuggernautRenderer* renderer;
+	std::unique_ptr<JuggernautRenderer> renderer = nullptr;
 
 	switch (api)
 	{
 		case jnt::GraphicsAPI::Vulkan:
-			renderer = new VulkanRenderer();
+			renderer = std::make_unique<VulkanRenderer>();
 			break;
 		default:
-			renderer = nullptr;
+			ConsoleOutput::Error("Invalid graphics API specified during renderer creation.");
 			break;
 	}
 

@@ -4,6 +4,7 @@
 #include "enums.hpp"
 
 #include <cstdint>
+#include <memory>
 
 namespace jnt
 {
@@ -17,6 +18,16 @@ namespace jnt
 		 * Assign default values to members
 		 */
 		JuggernautRenderer();
+
+		/**
+		 * No copy constructor
+		 */
+		JuggernautRenderer(const JuggernautRenderer& other) = delete;
+
+		/**
+		 * Destructor does nothing but is needed for std::unique_ptr<T>()
+		 */
+		virtual ~JuggernautRenderer() = default;
 
 		/**
 		 * Initialize a new renderer
@@ -52,7 +63,7 @@ namespace jnt
 		 * @param	api		Graphics API to create a renderer for
 		 * @return	New renderer
 		 */
-		static JuggernautRenderer* New(GraphicsAPI api);
+		static std::unique_ptr<JuggernautRenderer> New(GraphicsAPI api);
 
 	protected:
 		/**
