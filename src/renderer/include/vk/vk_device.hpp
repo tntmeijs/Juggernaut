@@ -3,6 +3,7 @@
 
 #include "vulkan/vulkan.h"
 
+#include <memory>
 #include <string_view>
 #include <vector>
 
@@ -94,9 +95,9 @@ namespace jnt
         VkPhysicalDevice PhysicalDevice;
         VkDevice LogicalDevice;
 
-        VulkanQueueFamilies* QueueFamilies;
-        VulkanQueue* GraphicsQueue;
-        VulkanQueue* PresentationQueue;
+        std::shared_ptr<VulkanQueueFamilies> QueueFamilies;
+        std::shared_ptr<VulkanQueue> GraphicsQueue;
+        std::shared_ptr<VulkanQueue> PresentationQueue;
 
         std::vector<const char*> DeviceExtensions;
     };

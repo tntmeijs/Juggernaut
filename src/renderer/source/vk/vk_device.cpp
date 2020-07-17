@@ -133,13 +133,7 @@ bool VulkanDevice::CreatePhysical(const VulkanInstance& instance, const VulkanWi
 
 bool VulkanDevice::FindQueueFamilies(const VulkanWindowSurface& windowSurface)
 {
-	if (QueueFamilies)
-	{
-		delete QueueFamilies;
-	}
-
-	QueueFamilies = new VulkanQueueFamilies();
-
+	QueueFamilies = std::make_shared<VulkanQueueFamilies>();
 	QueueFamilies->Find(PhysicalDevice, windowSurface.Get());
 	return QueueFamilies->IsComplete();
 }
@@ -188,7 +182,7 @@ void VulkanDevice::ConfigureQueueHandles()
 		VkQueue queue = VK_NULL_HANDLE;
 		vkGetDeviceQueue(LogicalDevice, QueueFamilies->GetGraphicsFamilyIndex(), 0, &queue);
 
-		GraphicsQueue = new VulkanQueue();
+		GraphicsQueue = std::make_shared<VulkanQueue>();
 		GraphicsQueue->Set(queue);
 	}
 	else
@@ -201,7 +195,7 @@ void VulkanDevice::ConfigureQueueHandles()
 		VkQueue queue = VK_NULL_HANDLE;
 		vkGetDeviceQueue(LogicalDevice, QueueFamilies->GetPresentationFamilyIndex(), 0, &queue);
 
-		PresentationQueue = new VulkanQueue();
+		PresentationQueue = std::make_shared<VulkanQueue>();
 		PresentationQueue->Set(queue);
 	}
 	else
@@ -218,16 +212,6 @@ void VulkanDevice::AddExtension(std::string_view extensionName)
 void VulkanDevice::Destroy() const
 {
 	vkDestroyDevice(LogicalDevice, nullptr);
-
-	if (QueueFamilies)
-	{
-		delete QueueFamilies;
-	}
-
-	if (GraphicsQueue)
-	{
-		delete GraphicsQueue;
-	}
 }
 
 const VkPhysicalDevice& VulkanDevice::GetGPU() const
