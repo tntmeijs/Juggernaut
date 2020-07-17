@@ -1,5 +1,5 @@
-#include "vk/window_surface.hpp"
-#include "vk/instance.hpp"
+#include "vk/vk_window_surface.hpp"
+#include "vk/vk_instance.hpp"
 
 using namespace jnt;
 

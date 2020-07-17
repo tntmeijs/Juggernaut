@@ -1,10 +1,10 @@
-#include "vk/device.hpp"
-#include "vk/instance.hpp"
-#include "vk/queue_families.hpp"
-#include "vk/queue.hpp"
-#include "vk/validation_layers.hpp"
-#include "vk/window_surface.hpp"
-#include "vk/swapchain.hpp"
+#include "vk/vk_device.hpp"
+#include "vk/vk_instance.hpp"
+#include "vk/vk_queue_families.hpp"
+#include "vk/vk_queue.hpp"
+#include "vk/vk_validation_layers.hpp"
+#include "vk/vk_window_surface.hpp"
+#include "vk/vk_swapchain.hpp"
 #include "utility/console_output.hpp"
 
 #include <map>

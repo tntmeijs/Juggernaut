@@ -1,7 +1,7 @@
-#include "vk/debug_messenger.hpp"
-#include "vk/extensions.hpp"
-#include "vk/instance.hpp"
-#include "vk/validation_layers.hpp"
+#include "vk/vk_debug_messenger.hpp"
+#include "vk/vk_extensions.hpp"
+#include "vk/vk_instance.hpp"
+#include "vk/vk_validation_layers.hpp"
 #include "utility/console_output.hpp"
 
 using namespace jnt;

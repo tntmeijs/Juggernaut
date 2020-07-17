@@ -1,7 +1,7 @@
-#include "vk/swapchain.hpp"
-#include "vk/device.hpp"
-#include "vk/queue_families.hpp"
-#include "vk/window_surface.hpp"
+#include "vk/vk_swapchain.hpp"
+#include "vk/vk_device.hpp"
+#include "vk/vk_queue_families.hpp"
+#include "vk/vk_window_surface.hpp"
 
 #include <algorithm>
 

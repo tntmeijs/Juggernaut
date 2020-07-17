@@ -1,25 +1,28 @@
 set(SOURCE_LIST
+    include/enums.hpp
     include/renderer.hpp
-    include/vk/instance.hpp
-    include/vk/extensions.hpp
-    include/vk/validation_layers.hpp
-    include/vk/debug_messenger.hpp
-    include/vk/device.hpp
-    include/vk/queue_families.hpp
-    include/vk/queue.hpp
-    include/vk/window_surface.hpp
-    include/vk/swapchain.hpp
+    include/vk/vk_renderer.hpp
+    include/vk/vk_instance.hpp
+    include/vk/vk_extensions.hpp
+    include/vk/vk_validation_layers.hpp
+    include/vk/vk_debug_messenger.hpp
+    include/vk/vk_device.hpp
+    include/vk/vk_queue_families.hpp
+    include/vk/vk_queue.hpp
+    include/vk/vk_window_surface.hpp
+    include/vk/vk_swapchain.hpp
     include/utility/console_output.hpp
     source/renderer.cpp
-    source/vk/instance.cpp
-    source/vk/extensions.cpp
-    source/vk/validation_layers.cpp
-    source/vk/debug_messenger.cpp
-    source/vk/device.cpp
-    source/vk/queue_families.cpp
-    source/vk/queue.cpp
-    source/vk/window_surface.cpp
-    source/vk/swapchain.cpp
+    source/vk/vk_renderer.cpp
+    source/vk/vk_instance.cpp
+    source/vk/vk_extensions.cpp
+    source/vk/vk_validation_layers.cpp
+    source/vk/vk_debug_messenger.cpp
+    source/vk/vk_device.cpp
+    source/vk/vk_queue_families.cpp
+    source/vk/vk_queue.cpp
+    source/vk/vk_window_surface.cpp
+    source/vk/vk_swapchain.cpp
     source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})

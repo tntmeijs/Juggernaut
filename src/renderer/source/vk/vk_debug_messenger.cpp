@@ -1,5 +1,5 @@
-#include "vk/debug_messenger.hpp"
-#include "vk/instance.hpp"
+#include "vk/vk_debug_messenger.hpp"
+#include "vk/vk_instance.hpp"
 #include "utility/console_output.hpp"
 
 using namespace jnt;

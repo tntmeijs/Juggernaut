@@ -1,52 +1,66 @@
 #ifndef JUGGERNAUT_RENDERER_HPP
 #define JUGGERNAUT_RENDERER_HPP
 
-#include <cstdint>
+#include "enums.hpp"
 
-// GLFW forward declarations
-struct GLFWwindow;
+#include <cstdint>
 
 namespace jnt
 {
-	// Juggernaut forward declarations
-	class VulkanInstance;
-    class VulkanDevice;
-    class VulkanWindowSurface;
-    class VulkanSwapchain;
+	/**
+	 * Base class for renderers
+	 */
+	class JuggernautRenderer
+	{
+	public:
+		/**
+		 * Initialize a new renderer
+		 * 
+		 * @param	outputWidth		Horizontal output resolution
+		 * @param	outputHeight	Vertical output resolution
+		 */
+		void Initialize(std::uint32_t outputWidth, std::uint32_t outputHeight);
 
-    class Renderer
-    {
-    public:
-        /**
-         * Create a new renderer
-         * 
-         * @param   width   Horizontal output resolution
-         * @param   height  Vertical output resolution
-         */
-        Renderer(std::uint32_t width, std::uint32_t height);
+		/**
+		 * Create a new renderer
+		 * 
+		 * @return	True when the renderer was created successfully, false otherwise
+		 */
+		virtual bool Create() = 0;
 
-        void Run();
+		/**
+		 * Destroy the renderer
+		 */
+		virtual void Destroy() = 0;
 
-    private:
-        void InitWindow();
+		/**
+		 * Returns true as long as the renderer is still busy
+		 * 
+		 * @return	True while busy, false when done
+		 */
+		virtual bool IsActive() = 0;
 
-        void InitVulkan();
+	public:
+		/**
+		 * Factory to create a new renderer using the specified graphics API
+		 * 
+		 * @param	api		Graphics API to create a renderer for
+		 * @return	New renderer
+		 */
+		static JuggernautRenderer* New(GraphicsAPI api);
 
-        void MainLoop();
+	protected:
+		/**
+		 * Called after initializing the base renderer
+		 * Useful for setting default values and ensuring all variables have
+		 * valid values
+		 */
+		virtual void PostInitialize() = 0;
 
-        void Cleanup();
-
-    private:
-		std::uint32_t Width;
-		std::uint32_t Height;
-
-        GLFWwindow* Window;
-
-        VulkanInstance* Instance;
-        VulkanDevice* Device;
-        VulkanWindowSurface* WindowSurface;
-        VulkanSwapchain* Swapchain;
-    };
+	protected:
+		std::uint32_t OutputWidth;
+		std::uint32_t OutputHeight;
+	};
 }
 
 #endif //! JUGGERNAUT_RENDERER_HPP
