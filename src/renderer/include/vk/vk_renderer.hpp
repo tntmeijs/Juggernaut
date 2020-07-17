@@ -3,6 +3,8 @@
 
 #include "renderer.hpp"
 
+#include <memory>
+
 // GLFW forward declarations
 struct GLFWwindow;
 
@@ -57,10 +59,10 @@ namespace jnt
     private:
         GLFWwindow* Window;
 
-        VulkanInstance* Instance;
-        VulkanDevice* Device;
-        VulkanWindowSurface* WindowSurface;
-        VulkanSwapchain* Swapchain;
+        std::unique_ptr<VulkanInstance> Instance;
+        std::unique_ptr<VulkanDevice> Device;
+        std::unique_ptr<VulkanWindowSurface> WindowSurface;
+        std::unique_ptr<VulkanSwapchain> Swapchain;
     };
 }
 

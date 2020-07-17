@@ -83,7 +83,7 @@ void VulkanRenderer::InitVulkan()
     validationLayers.AddValidationLayer("VK_LAYER_KHRONOS_validation");
 #endif
 
-    Instance = new VulkanInstance("Juggernaut", "Juggernaut");
+    Instance = std::make_unique<VulkanInstance>("Juggernaut", "Juggernaut");
     if (Instance->Create(extensions, validationLayers))
     {
 		ConsoleOutput::Success("Vulkan instance created successfully.");
@@ -97,7 +97,7 @@ void VulkanRenderer::InitVulkan()
     /* Window surface creation                                              */
     /************************************************************************/
 #if _WINDOWS
-    WindowSurface = new VulkanWindowSurface();
+    WindowSurface = std::make_unique<VulkanWindowSurface>();
     if (WindowSurface->Create(*Instance, glfwGetWin32Window(Window)))
     {
         ConsoleOutput::Success("Vulkan window surface created successfully.");
@@ -113,7 +113,7 @@ void VulkanRenderer::InitVulkan()
     /************************************************************************/
     /* Device creation                                                      */
     /************************************************************************/
-    Device = new VulkanDevice();
+    Device = std::make_unique<VulkanDevice>();
 	Device->AddExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
 	if (Device->CreatePhysical(*Instance, *WindowSurface))
@@ -148,7 +148,7 @@ void VulkanRenderer::InitVulkan()
     /************************************************************************/
     /* Swapchain creation                                                   */
     /************************************************************************/
-    Swapchain = new VulkanSwapchain(OutputWidth, OutputHeight);
+    Swapchain = std::make_unique<VulkanSwapchain>(OutputWidth, OutputHeight);
     if (Swapchain->Create(*Device, *WindowSurface))
     {
         ConsoleOutput::Success("Swapchain created successfully.");
@@ -164,28 +164,24 @@ void VulkanRenderer::Cleanup()
     if (Swapchain)
     {
         Swapchain->Destroy(*Device);
-        delete Swapchain;
         ConsoleOutput::Success("Swapchain deleted.");
     }
 
     if (Device)
     {
         Device->Destroy();
-        delete Device;
 		ConsoleOutput::Success("Device deleted.");
 	}
 
     if (WindowSurface)
     {
         WindowSurface->Destroy(*Instance);
-        delete WindowSurface;
 		ConsoleOutput::Success("Window surface deleted.");
     }
 
     if (Instance)
     {
         Instance->Destroy();
-        delete Instance;
 		ConsoleOutput::Success("Instance deleted.");
 	}
 
