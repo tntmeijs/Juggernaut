@@ -1,6 +1,6 @@
 set(SOURCE_LIST
-    include/enums.hpp
-    include/renderer.hpp
+    include/juggernaut_enums.hpp
+    include/juggernaut_renderer.hpp
     include/vk/vk_renderer.hpp
     include/vk/vk_instance.hpp
     include/vk/vk_extensions.hpp
@@ -12,7 +12,7 @@ set(SOURCE_LIST
     include/vk/vk_window_surface.hpp
     include/vk/vk_swapchain.hpp
     include/utility/console_output.hpp
-    source/renderer.cpp
+    source/juggernaut_renderer.cpp
     source/vk/vk_renderer.cpp
     source/vk/vk_instance.cpp
     source/vk/vk_extensions.cpp

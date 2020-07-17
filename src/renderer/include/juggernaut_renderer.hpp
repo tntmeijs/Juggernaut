@@ -1,7 +1,7 @@
 #ifndef JUGGERNAUT_RENDERER_HPP
 #define JUGGERNAUT_RENDERER_HPP
 
-#include "enums.hpp"
+#include "juggernaut_enums.hpp"
 
 #include <cstdint>
 #include <memory>

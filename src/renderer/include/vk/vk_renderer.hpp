@@ -1,7 +1,7 @@
 #ifndef JUGGERNAUT_VULKAN_RENDERER_HPP
 #define JUGGERNAUT_VULKAN_RENDERER_HPP
 
-#include "renderer.hpp"
+#include "juggernaut_renderer.hpp"
 
 #include <memory>
 
