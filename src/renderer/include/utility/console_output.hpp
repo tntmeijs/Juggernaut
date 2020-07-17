@@ -40,6 +40,11 @@ namespace jnt
          */
         static void Reset();
 
+        /**
+         * Flush the STDOUT and STDERR streams
+         */
+        static void Flush();
+
     private:
         /**
          * Color to set the console to, internal use only

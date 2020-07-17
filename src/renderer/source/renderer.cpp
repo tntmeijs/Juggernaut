@@ -178,4 +178,5 @@ void Renderer::Cleanup()
 
     // Make sure the text color is set to the default console color again
     ConsoleOutput::Reset();
+    ConsoleOutput::Flush();
 }

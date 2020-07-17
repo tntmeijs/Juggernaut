@@ -11,30 +11,36 @@ using namespace jnt;
 void ConsoleOutput::Info(std::string_view message)
 {
 	SetConsoleColor(ConsoleOutput::Color::White);
-	std::cout << "[INFO]\t\t" << message << std::endl;
+	std::cout << "[INFO]\t\t" << message << '\n';
 }
 
 void ConsoleOutput::Success(std::string_view message)
 {
 	SetConsoleColor(ConsoleOutput::Color::Green);
-	std::cout << "[SUCCESS]\t"<< message << std::endl;
+	std::cout << "[SUCCESS]\t"<< message << '\n';
 }
 
 void ConsoleOutput::Warning(std::string_view message)
 {
 	SetConsoleColor(ConsoleOutput::Color::Yellow);
-	std::cout << "[WARNING]\t" << message << std::endl;
+	std::cout << "[WARNING]\t" << message << '\n';
 }
 
 void ConsoleOutput::Error(std::string_view message)
 {
 	SetConsoleColor(ConsoleOutput::Color::Red);
-	std::cout << "[ERROR]\t\t" << message << std::endl;
+	std::cerr << "[ERROR]\t\t" << message << '\n';
 }
 
 void ConsoleOutput::Reset()
 {
 	SetConsoleColor(Color::White);
+}
+
+void ConsoleOutput::Flush()
+{
+	std::flush(std::cout);
+	std::flush(std::cerr);
 }
 
 void ConsoleOutput::SetConsoleColor(Color color)
@@ -58,8 +64,10 @@ void ConsoleOutput::SetConsoleColor(Color color)
 	}
 
 	// Set the new console color
-	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(consoleHandle, textColor);
+	HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
+	SetConsoleTextAttribute(stdoutHandle, textColor);
+	SetConsoleTextAttribute(stderrHandle, textColor);
 #else
 	color; // Suppress "unreferenced formal parameter"
 #endif
