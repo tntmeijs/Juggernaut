@@ -6,6 +6,16 @@
 
 using namespace jnt;
 
+VulkanInstance::VulkanInstance() :
+	ApplicationName(""),
+	EngineName(""),
+	Instance(VK_NULL_HANDLE),
+	DebugMessenger(nullptr)
+{}
+
+VulkanInstance::~VulkanInstance()
+{}
+
 VulkanInstance::VulkanInstance(std::string_view applicationName, std::string_view engineName) :
 	ApplicationName(applicationName),
 	EngineName(engineName),
@@ -40,7 +50,7 @@ bool VulkanInstance::Create(const VulkanExtensions& extensions, const VulkanVali
 	/************************************************************************/
 	/* Debug messenger initialization (ALWAYS BEFORE INSTANCE CREATION)     */
 	/************************************************************************/
-	DebugMessenger = new VulkanDebugMessenger();
+	DebugMessenger = std::make_unique<VulkanDebugMessenger>();
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = DebugMessenger->Initialize();
 #endif
 
@@ -73,7 +83,6 @@ void VulkanInstance::Destroy() const
 	if (DebugMessenger)
 	{
 		DebugMessenger->Destroy(Instance);
-		delete DebugMessenger;
 	}
 #endif
 

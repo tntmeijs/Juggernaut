@@ -4,6 +4,13 @@
 
 using namespace jnt;
 
+VulkanDebugMessenger::VulkanDebugMessenger() :
+	DebugMessenger(VK_NULL_HANDLE)
+{}
+
+VulkanDebugMessenger::~VulkanDebugMessenger()
+{}
+
 VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::Initialize() const
 {
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};

@@ -3,6 +3,7 @@
 
 #include "vulkan/vulkan.h"
 
+#include <memory>
 #include <string_view>
 #include <vector>
 
@@ -19,6 +20,13 @@ namespace jnt
 	class VulkanInstance
 	{
 	public:
+		VulkanInstance();														// Constructor
+		VulkanInstance(const VulkanInstance& other)					= delete;	// Copy constructor
+		VulkanInstance(VulkanInstance&& other) noexcept				= delete;	// Move constructor
+		VulkanInstance& operator=(const VulkanInstance& other)		= delete;	// Copy assignment operator
+		VulkanInstance& operator=(VulkanInstance&& other) noexcept	= delete;	// Move assignment operator
+		~VulkanInstance();														// Destructor
+
 		/**
 		 * Create a new Vulkan instance wrapper object
 		 * 
@@ -69,7 +77,7 @@ namespace jnt
 
 		VkInstance Instance;
 
-		VulkanDebugMessenger* DebugMessenger;
+		std::unique_ptr<VulkanDebugMessenger> DebugMessenger;
 	};
 }
 

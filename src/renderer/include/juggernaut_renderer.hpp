@@ -14,15 +14,11 @@ namespace jnt
 	class JuggernautRenderer
 	{
 	public:
-		/**
-		 * Assign default values to members
-		 */
-		JuggernautRenderer();
-
-		/**
-		 * No copy constructor
-		 */
-		JuggernautRenderer(const JuggernautRenderer& other) = delete;
+		JuggernautRenderer();															// Constructor
+		JuggernautRenderer(const JuggernautRenderer& other)					= delete;	// Copy constructor
+		JuggernautRenderer(JuggernautRenderer&& other) noexcept				= delete;	// Move constructor
+		JuggernautRenderer& operator=(const JuggernautRenderer& other)		= delete;	// Copy assignment operator
+		JuggernautRenderer& operator=(JuggernautRenderer&& other) noexcept	= delete;	// Move assignment operator
 
 		/**
 		 * Destructor does nothing but is needed for std::unique_ptr<T>()

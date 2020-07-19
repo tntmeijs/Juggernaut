@@ -14,6 +14,13 @@ namespace jnt
     class VulkanDebugMessenger
     {
     public:
+        VulkanDebugMessenger();                                                             // Constructor
+        VulkanDebugMessenger(const VulkanDebugMessenger& other)                 = delete;   // Copy constructor
+        VulkanDebugMessenger(VulkanDebugMessenger&& other) noexcept             = delete;   // Move constructor
+        VulkanDebugMessenger& operator=(const VulkanDebugMessenger& other)      = delete;   // Copy assignment operator
+        VulkanDebugMessenger& operator=(VulkanDebugMessenger&& other) noexcept  = delete;   // Move assignment operator
+        ~VulkanDebugMessenger();                                                            // Destructor
+
         VkDebugUtilsMessengerCreateInfoEXT Initialize() const;
 
         bool Create(const VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT& createInfo);
