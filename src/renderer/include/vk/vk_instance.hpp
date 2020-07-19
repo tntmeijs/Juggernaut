@@ -21,10 +21,10 @@ namespace jnt
 	{
 	public:
 		VulkanInstance();														// Constructor
-		VulkanInstance(const VulkanInstance& other)					= delete;	// Copy constructor
-		VulkanInstance(VulkanInstance&& other) noexcept				= delete;	// Move constructor
-		VulkanInstance& operator=(const VulkanInstance& other)		= delete;	// Copy assignment operator
-		VulkanInstance& operator=(VulkanInstance&& other) noexcept	= delete;	// Move assignment operator
+		VulkanInstance(const VulkanInstance& other)					= default;	// Copy constructor
+		VulkanInstance(VulkanInstance&& other) noexcept				= default;	// Move constructor
+		VulkanInstance& operator=(const VulkanInstance& other)		= default;	// Copy assignment operator
+		VulkanInstance& operator=(VulkanInstance&& other) noexcept	= default;	// Move assignment operator
 		~VulkanInstance();														// Destructor
 
 		/**

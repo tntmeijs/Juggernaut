@@ -4,6 +4,7 @@
 #include "vulkan/vulkan.h"
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 namespace jnt
@@ -11,6 +12,7 @@ namespace jnt
     // Juggernaut forward declarations
     class VulkanDevice;
     class VulkanWindowSurface;
+    class VulkanImageView;
 
     /**
      * Helper structure to save swapchain support details
@@ -35,6 +37,12 @@ namespace jnt
 		 * @param   height  Desired render output height
          */
         VulkanSwapchain(std::uint32_t width, std::uint32_t height);
+
+        VulkanSwapchain(const VulkanSwapchain& other)                   = default;  // Copy constructor
+        VulkanSwapchain(VulkanSwapchain&& other) noexcept               = default;  // Move constructor
+        VulkanSwapchain& operator=(const VulkanSwapchain& other)        = default;  // Copy assignment operator
+        VulkanSwapchain& operator=(VulkanSwapchain&& other) noexcept    = default;  // Move assignment operator
+        ~VulkanSwapchain();                                                         // Destructor
 
         /**
          * Helper function to determine if the swapchain support is adequate
@@ -102,6 +110,7 @@ namespace jnt
         VkExtent2D SwapchainExtent;
         VkSwapchainKHR Swapchain;
 
+        std::vector<std::unique_ptr<VulkanImageView>> SwapchainImageViews;
         std::vector<VkImage> SwapchainImages;
     };
 }

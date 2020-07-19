@@ -15,15 +15,11 @@ namespace jnt
 	{
 	public:
 		JuggernautRenderer();															// Constructor
-		JuggernautRenderer(const JuggernautRenderer& other)					= delete;	// Copy constructor
-		JuggernautRenderer(JuggernautRenderer&& other) noexcept				= delete;	// Move constructor
-		JuggernautRenderer& operator=(const JuggernautRenderer& other)		= delete;	// Copy assignment operator
-		JuggernautRenderer& operator=(JuggernautRenderer&& other) noexcept	= delete;	// Move assignment operator
-
-		/**
-		 * Destructor does nothing but is needed for std::unique_ptr<T>()
-		 */
-		virtual ~JuggernautRenderer() = default;
+		JuggernautRenderer(const JuggernautRenderer& other)					= default;	// Copy constructor
+		JuggernautRenderer(JuggernautRenderer&& other) noexcept				= default;	// Move constructor
+		JuggernautRenderer& operator=(const JuggernautRenderer& other)		= default;	// Copy assignment operator
+		JuggernautRenderer& operator=(JuggernautRenderer&& other) noexcept	= default;	// Move assignment operator
+		virtual ~JuggernautRenderer()										= default;	// Destructor
 
 		/**
 		 * Initialize a new renderer

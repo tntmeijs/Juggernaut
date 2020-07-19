@@ -2,8 +2,11 @@
 #include "vk/vk_device.hpp"
 #include "vk/vk_queue_families.hpp"
 #include "vk/vk_window_surface.hpp"
+#include "vk/vk_image_view.hpp"
+#include "utility/console_output.hpp"
 
 #include <algorithm>
+#include <string>
 
 using namespace jnt;
 
@@ -11,6 +14,9 @@ VulkanSwapchain::VulkanSwapchain(std::uint32_t width, std::uint32_t height) :
 	Width(width),
 	Height(height),
 	Swapchain(VK_NULL_HANDLE)
+{}
+
+VulkanSwapchain::~VulkanSwapchain()
 {}
 
 bool VulkanSwapchain::SwapchainSupportOk(const VulkanSwapchainSupportDetails& details)
@@ -122,11 +128,43 @@ bool VulkanSwapchain::Create(const VulkanDevice& device, const VulkanWindowSurfa
 	SwapchainImages.resize(swapchainImageCount);
 	vkGetSwapchainImagesKHR(device.Get(), Swapchain, &swapchainImageCount, SwapchainImages.data());
 
+	// Create image views for the images in the swapchain
+	for (const auto& image : SwapchainImages)
+	{
+		VulkanImageViewInfo info	= {};
+		info.ArrayLayer				= 0;
+		info.Format					= SwapchainSurfaceFormat.format;
+		info.LayerCount				= 1;
+		info.LevelCount				= 1;
+		info.MipLevel				= 0;
+		info.Type					= ImageViewType::Image2D;
+		info.Usage					= ImageViewUsage::Color;
+
+		std::unique_ptr<VulkanImageView> imageView = std::make_unique<VulkanImageView>();
+
+		if (imageView->Create(device, image, info))
+		{
+			ConsoleOutput::Success("Swapchain image view creation successful.");
+		}
+		else
+		{
+			ConsoleOutput::Error("Swapchain image view creation failed.");
+			return false;
+		}
+
+		SwapchainImageViews.push_back(std::move(imageView));
+	}
+
 	return true;
 }
 
 void VulkanSwapchain::Destroy(const VulkanDevice& device) const
 {
+	for (const auto& imageView : SwapchainImageViews)
+	{
+		imageView->Destroy(device);
+	}
+
 	vkDestroySwapchainKHR(device.Get(), Swapchain, nullptr);
 }
 

@@ -11,6 +11,8 @@ set(SOURCE_LIST
     include/vk/vk_queue.hpp
     include/vk/vk_window_surface.hpp
     include/vk/vk_swapchain.hpp
+    include/vk/vk_image_view.hpp
+    include/vk/vk_convert.hpp
     include/utility/console_output.hpp
     source/juggernaut_renderer.cpp
     source/vk/vk_renderer.cpp
@@ -23,6 +25,8 @@ set(SOURCE_LIST
     source/vk/vk_queue.cpp
     source/vk/vk_window_surface.cpp
     source/vk/vk_swapchain.cpp
+    source/vk/vk_image_view.cpp
+    source/vk/vk_convert.cpp
     source/utility/console_output.cpp)
 
 add_library(${RENDERER_NAME} STATIC ${SOURCE_LIST})

@@ -15,10 +15,10 @@ namespace jnt
     {
     public:
         VulkanDebugMessenger();                                                             // Constructor
-        VulkanDebugMessenger(const VulkanDebugMessenger& other)                 = delete;   // Copy constructor
-        VulkanDebugMessenger(VulkanDebugMessenger&& other) noexcept             = delete;   // Move constructor
-        VulkanDebugMessenger& operator=(const VulkanDebugMessenger& other)      = delete;   // Copy assignment operator
-        VulkanDebugMessenger& operator=(VulkanDebugMessenger&& other) noexcept  = delete;   // Move assignment operator
+        VulkanDebugMessenger(const VulkanDebugMessenger& other)                 = default;  // Copy constructor
+        VulkanDebugMessenger(VulkanDebugMessenger&& other) noexcept             = default;  // Move constructor
+        VulkanDebugMessenger& operator=(const VulkanDebugMessenger& other)      = default;  // Copy assignment operator
+        VulkanDebugMessenger& operator=(VulkanDebugMessenger&& other) noexcept  = default;  // Move assignment operator
         ~VulkanDebugMessenger();                                                            // Destructor
 
         VkDebugUtilsMessengerCreateInfoEXT Initialize() const;
