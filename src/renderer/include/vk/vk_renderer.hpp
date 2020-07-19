@@ -1,5 +1,5 @@
-#ifndef JUGGERNAUT_VULKAN_RENDERER_HPP
-#define JUGGERNAUT_VULKAN_RENDERER_HPP
+#ifndef JUGGERNAUT_VK_RENDERER_HPP
+#define JUGGERNAUT_VK_RENDERER_HPP
 
 #include "juggernaut_renderer.hpp"
 
@@ -66,4 +66,4 @@ namespace jnt
     };
 }
 
-#endif //! JUGGERNAUT_RENDERER_HPP
+#endif //! JUGGERNAUT_VK_RENDERER_HPP
