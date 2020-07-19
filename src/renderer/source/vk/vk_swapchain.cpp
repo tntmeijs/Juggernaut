@@ -170,8 +170,8 @@ VkExtent2D VulkanSwapchain::ChooseSwapchainExtent(const VulkanSwapchainSupportDe
 	
 	// Calculate the best matching output resolution
 	VkExtent2D actualExtent = { Width, Height };
-	actualExtent.width = std::max(details.capabilities.minImageExtent.width, std::min(details.capabilities.maxImageExtent.width, actualExtent.width));
-	actualExtent.height = std::max(details.capabilities.minImageExtent.height, std::min(details.capabilities.maxImageExtent.height, actualExtent.height));
+	actualExtent.width = std::clamp(actualExtent.width, details.capabilities.minImageExtent.width, details.capabilities.minImageExtent.width);
+	actualExtent.height = std::clamp(actualExtent.height, details.capabilities.minImageExtent.height, details.capabilities.minImageExtent.height);
 
 	return actualExtent;
 }
