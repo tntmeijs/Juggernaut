@@ -137,6 +137,15 @@ namespace jnt
 		Uint_R64_G64_B64_A64,
 		Sfloat_R64_G64_B64_A64
     };
+
+	/**
+	 * All supported pipeline types
+	 */
+	enum class PipelineType
+	{
+		Graphics,
+		Compute
+	};
 }
 
 #endif //! JUGGERNAUT_ENUMS_HPP
